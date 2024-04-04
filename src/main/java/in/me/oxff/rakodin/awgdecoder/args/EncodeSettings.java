@@ -17,14 +17,19 @@ import java.util.*;
 @ToString(callSuper = true)
 public class EncodeSettings extends ModeSettings {
     private File file;
+    private boolean dump = false;
+    private String confName;
     private final List<InetAddress> dns = new ArrayList<>(2) {{
        add(getInetAddress("1.1.1.1"));
        add(getInetAddress("1.0.0.1"));
     }};
 
+    private final static Random random = new Random(System.currentTimeMillis());
     private final static Map<String, String> args =
             Map.of("-i", "Input file is not set",
-                    "-d", "DNS servers is not set");
+                    "-d", "DNS servers is not set",
+                    "-of","Invalid output format",
+                    "-n", "Configuration name");
     public EncodeSettings(Mode mode) {
         super(mode);
     }
@@ -47,19 +52,22 @@ public class EncodeSettings extends ModeSettings {
         } else {
             throw new SettingsParseError(String.format("Can't read file %s", fileName));
         }
+        dump = out.getOrDefault("-of", "conf").equalsIgnoreCase("dump");
+        confName = out.getOrDefault("-n", String.format("Conv-%s", Math.abs(random.nextInt())));
     }
 
     private void fillDns(File input, String dnsStr) {
+        //first we get user input
         if (dnsStr != null && !dnsStr.isBlank()) {
             var userDns = Arrays.asList(dnsStr.split(":"));
             if (!userDns.isEmpty()) {
                 dns.clear();
                 userDns.forEach(ud -> dns.add(getInetAddress(ud)));
+                return;
             }
         }
-        //okay, try to read DNS from file
-        var config = getAsConfig();
-        var configDnsStr = readFromSection(config, "Interface", "DNS");
+        //next try to read DNS from file
+        var configDnsStr = readDNSFromConf(getAsConfig());
         if (configDnsStr != null && !configDnsStr.startsWith("$")) {
             dns.clear();
             Arrays.asList(configDnsStr.split(","))
@@ -74,7 +82,9 @@ public class EncodeSettings extends ModeSettings {
         }
     }
 
-    public static String readFromSection(String fContent, String section, String name) {
+    public static String readDNSFromConf(String fContent) {
+        var section = "Interface";
+        var name = "DNS";
         var scanner = new Scanner(fContent);
         var inSection = false;
         while (scanner.hasNextLine()) {

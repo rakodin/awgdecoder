@@ -27,10 +27,11 @@ public class ArgumentParser {
                            dump: full AmneziaWG json dump
                 Example:
                     to get AmneziaWG config in awg conf format execute
-                    awgdecoder decode -i ./myConfig.vpn -f conf > myawg0.conf
+                    awgdecoder decode -i ./myConfig.vpn -of conf > myawg0.conf
                 encode:
                     -i input file   : required (AmneziaWG awg config)
                     -d dns1:dns2    : optional (dns1 dns2 for vpn://). default: 1.1.1.1:1.0.0.1
+                    -n conf name    : optional (one word configuration name). default Conv-<random_number>
                     -of <conf|dump> : optional output format:
                              conf: AmneziaWG full config (vpn://...) (default)
                              dump: full AmneziaWG json dump

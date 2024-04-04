@@ -22,7 +22,6 @@ import java.util.zip.DeflaterOutputStream;
 
 @Getter
 public class Encoder extends Processor<EncodeSettings> {
-    private final Random random = new Random(System.currentTimeMillis());
     public Encoder(EncodeSettings settings) {
         super(settings);
     }
@@ -31,7 +30,7 @@ public class Encoder extends Processor<EncodeSettings> {
     @SneakyThrows({IOException.class, IllegalAccessException.class, InvocationTargetException.class})
     public String process() {
         var ret = new AwgContainerHead();
-        ret.setDescription(String.format("Conv-%s", Math.abs(random.nextInt())));
+        ret.setDescription(getSettings().getConfName());
         ret.setDefaultContainer("amnezia-awg");
         var dns = getSettings().getDns();
         ret.setDns1(dns.get(0).getHostAddress());
@@ -60,7 +59,8 @@ public class Encoder extends Processor<EncodeSettings> {
         awgRecord.setLastConfig(om.toJson(lastConfig));
         BeanUtils.copyProperties(awgRecord, lastConfig);
         ret.setHostName(lastConfig.getHostName());
-        return encodeAsVpn(om.toJson(ret));
+        var result = om.toJson(ret);
+        return getSettings().isDump()? result: encodeAsVpn(result);
     }
 
     @SneakyThrows({IOException.class})

@@ -10,25 +10,6 @@
 
     <build>
         <plugins>
-           <!-- <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.3.5.RELEASE</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                        <configuration>
-                            <classifier>spring-boot</classifier>
-                            <mainClass>
-                                in.me.oxff.rakodin.awgdecoder.Main
-                            </mainClass>
-                            <classifier>run</classifier>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>-->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.6.0</version>
@@ -86,7 +67,5 @@
             <artifactId>wireguard-keytool</artifactId>
             <version>0.1.0</version>
         </dependency>
-
     </dependencies>
-
 </project>
