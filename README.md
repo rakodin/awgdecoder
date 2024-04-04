@@ -9,10 +9,10 @@ For Debian-based Linux distribution install JRE from apt repository:
 sudo apt install openjdk-17-jre-headless
 ```
 2. Download jar from [**latest release**](https://github.com/rakodin/awgdecoder/releases/latest)
-
+3. Run:
 ### 
 ```shell
-java -jar target/awgdecoder-1.0-SNAPSHOT-run.jar
+java -jar awgdecoder-1.0-SNAPSHOT-run.jar
 ```
 ```text
 AmneziaWG config file (en)(de)coder
